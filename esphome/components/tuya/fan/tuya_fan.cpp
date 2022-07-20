@@ -13,7 +13,7 @@ void TuyaFan::setup() {
       if (datapoint.value_enum >= this->speed_count_) {
         ESP_LOGE(TAG, "Speed has invalid value %d", datapoint.value_enum);
       } else {
-        this->speed = datapoint.value_enum + 1;
+        this->speed = datapoint.value_enum;
         this->publish_state();
       }
     });
@@ -76,7 +76,7 @@ void TuyaFan::control(const fan::FanCall &call) {
     this->parent_->set_enum_datapoint_value(*this->direction_id_, enable);
   }
   if (this->speed_id_.has_value() && call.get_speed().has_value()) {
-    this->parent_->set_integer_datapoint_value(*this->speed_id_, *call.get_speed() - 1);
+    this->parent_->set_integer_datapoint_value(*this->speed_id_, *call.get_speed());
   }
 }
 
