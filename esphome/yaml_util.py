@@ -88,7 +88,7 @@ def _add_data_ref(fn):
     return wrapped
 
 
-class ESPHomeLoader(yaml.SafeLoader):  # pylint: disable=too-many-ancestors
+class ESPHomeLoader(yaml.SafeLoader):
     """Loader class that keeps track of line numbers."""
 
     @_add_data_ref
@@ -390,8 +390,11 @@ def _load_yaml_internal(fname):
         loader.dispose()
 
 
-def dump(dict_):
+def dump(dict_, show_secrets=False):
     """Dump YAML to a string and remove null."""
+    if show_secrets:
+        _SECRET_VALUES.clear()
+        _SECRET_CACHE.clear()
     return yaml.dump(
         dict_, default_flow_style=False, allow_unicode=True, Dumper=ESPHomeDumper
     )
@@ -419,7 +422,7 @@ def is_secret(value):
         return None
 
 
-class ESPHomeDumper(yaml.SafeDumper):  # pylint: disable=too-many-ancestors
+class ESPHomeDumper(yaml.SafeDumper):
     def represent_mapping(self, tag, mapping, flow_style=None):
         value = []
         node = yaml.MappingNode(tag, value, flow_style=flow_style)
